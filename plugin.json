@@ -1,0 +1,11 @@
+{
+    "library": "./index.js",
+    "hooks": [
+        { "hook": "static:app.load", "method": "init"},
+        { "hook": "filter:widgets.getAreas", "method": "defineWidgetAreas" }
+    ],
+    "modules": {
+        "../client/feed.js": "./public/feed.js"
+    },
+    "templates": "./public/templates"
+}

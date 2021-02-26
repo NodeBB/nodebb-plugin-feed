@@ -1,0 +1,29 @@
+{
+  "name": "nodebb-plugin-feed",
+  "version": "1.0.0",
+  "description": "A Plugin that shows posts of users you follow",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeBB/nodebb-plugin-feed"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "feed"
+  ],
+  "author": "Baris Usakli <baris@nodebb.org>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "7.6.0",
+    "eslint-config-airbnb-base": "14.1.0",
+    "eslint-plugin-import": "2.21.1"
+  },
+  "nbbpm": {
+    "compatibility": "^1.15.0"
+  }
+}
