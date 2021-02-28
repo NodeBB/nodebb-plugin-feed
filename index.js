@@ -3,6 +3,7 @@
 
 const db = require.main.require('./src/database');
 const routeHelpers = require.main.require('./src/routes/helpers');
+const controllerHelpers = require.main.require('./src/controllers/helpers');
 const posts = require.main.require('./src/posts');
 const privileges = require.main.require('./src/privileges');
 const pagination = require.main.require('./src/pagination');
@@ -14,9 +15,9 @@ feed.init = async function (params) {
 	routeHelpers.setupPageRoute(params.router, '/feed', params.middleware, [], renderFeed);
 };
 
-async function renderFeed(req, res, next) {
+async function renderFeed(req, res) {
 	if (!req.loggedIn) {
-		return next();
+		return controllerHelpers.notAllowed(req, res);
 	}
 
 	const uids = await db.getSortedSetRevRange(`following:${req.uid}`, 0, -1);
