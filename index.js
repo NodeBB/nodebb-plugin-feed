@@ -1,9 +1,14 @@
 
 'use strict';
 
+const querystring = require('querystring');
+
+const _ = require.main.require('lodash');
+
 const db = require.main.require('./src/database');
 const routeHelpers = require.main.require('./src/routes/helpers');
 const controllerHelpers = require.main.require('./src/controllers/helpers');
+const user = require.main.require('./src/user');
 const posts = require.main.require('./src/posts');
 const privileges = require.main.require('./src/privileges');
 const pagination = require.main.require('./src/pagination');
@@ -20,8 +25,34 @@ async function renderFeed(req, res) {
 		return controllerHelpers.notAllowed(req, res);
 	}
 
-	const uids = await db.getSortedSetRevRange(`following:${req.uid}`, 0, -1);
-	const allPids = await db.getSortedSetRevRange(uids.map(uid => `uid:${uid}:posts`), 0, 500);
+	const cids = getCidsArray(req.query.cid);
+	const uid = parseInt(req.query.uid, 10);
+
+	const [uids, categoryData] = await Promise.all([
+		db.getSortedSetRevRange(`following:${req.uid}`, 0, -1),
+		controllerHelpers.getSelectedCategory(cids),
+	]);
+
+	const currentUids = uid ? [uid] : uids;
+	const sets = _.flatten(currentUids.map((uid) => {
+		if (cids) {
+			return cids.map(cid => `cid:${cid}:uid:${uid}:pids`);
+		}
+		return `uid:${uid}:posts`;
+	}));
+
+	const [allPids, following] = await Promise.all([
+		db.getSortedSetRevRange(
+			sets, 0, 499
+		),
+		user.getUsersFields(uids, ['username', 'uid', 'picture']),
+	]);
+
+	delete req.query._;
+	following.forEach((user) => {
+		user.selected = user.uid === uid;
+		user.url = `feed?${querystring.stringify({ ...req.query, uid: user.uid })}`;
+	});
 
 	const pids = await privileges.posts.filter('topics:read', allPids, req.uid);
 
@@ -32,10 +63,24 @@ async function renderFeed(req, res) {
 	const stop = start + meta.config.postsPerPage - 1;
 	const pagePids = pids.slice(start, stop + 1);
 	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, { stripTags: false });
+
 	res.render('feed', {
 		posts: postData,
+		following: following,
+		allCategoriesUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'cid', ''),
+		allUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'uid', ''),
+		selectedUser: following.find(u => u.uid === uid),
+		selectedCategory: categoryData.selectedCategory,
+		selectedCids: categoryData.selectedCids,
 		pagination: pagination.create(page, pageCount, req.query),
 	});
+}
+
+function getCidsArray(cid) {
+	if (cid && !Array.isArray(cid)) {
+		cid = [cid];
+	}
+	return cid && cid.map(cid => parseInt(cid, 10));
 }
 
 feed.defineWidgetAreas = async function (areas) {

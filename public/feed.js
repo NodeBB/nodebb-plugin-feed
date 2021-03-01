@@ -3,10 +3,12 @@
 /* globals $, define, ajaxify, config, utils, app */
 define('forum/feed', [
 	'forum/infinitescroll',
-], function (infinitescroll) {
+	'categoryFilter',
+], function (infinitescroll, categoryFilter) {
 	var feed = {};
 	var page = 1;
 	feed.init = function () {
+		categoryFilter.init($('[component="category/dropdown"]'));
 		page = ajaxify.data.pagination.currentPage;
 		if (!config.usePagination) {
 			infinitescroll.init(loadMore);

@@ -5,6 +5,29 @@
 </div>
 
 <div class="feed">
+	<div class="topic-list-header btn-toolbar">
+		<!-- IMPORT partials/category-filter-right.tpl -->
+
+		<div class="btn-group pull-right bottom-sheet {{{ if !following.length }}}hidden{{{ end }}}">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				{{{ if selectedUser }}}
+				<span class="">{buildAvatar(selectedUser, "18", true, "not-responsive")} {selectedUser.username}</span>
+				{{{ else }}}
+				<span class="">All Users</span>
+				{{{ end }}} <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li role="presentation" class="user {{{ if !selectedUser}}}selected{{{end}}}">
+					<a role="menu-item" href="{config.relative_path}/{allUsersUrl}"><i class="fa fa-fw {{{ if !selectedUser }}}fa-check{{{ end }}}"></i>All Users</a>
+				</li>
+				{{{ each following }}}
+				<li role="presentation" class="user {{{ if following.selected}}}selected{{{end}}}">
+					<a role="menu-item" href="{config.relative_path}/{following.url}"><i class="fa fa-fw {{{ if following.selected }}}fa-check{{{ end }}}"></i>{buildAvatar(@value, "18", true, "not-responsive")} {following.username}</a>
+				</li>
+				{{{end}}}
+			</ul>
+		</div>
+	</div>
 	<div class="row">
 		<div data-widget-area="left" class="col-lg-3 col-sm-12 {{{ if !widgets.left.length }}}hidden{{{ end }}}">
 			{{{each widgets.left}}}
@@ -21,7 +44,7 @@
 		<div class="col-lg-9 col-sm-12">
 		{{{ end }}}
 			{{{ if !posts.length  }}}
-			<div class="alert alert-warning text-center">No posts found. Are you following anyone?</div>
+			<div class="alert alert-warning text-center">No posts found. {{{ if !following.length }}}Are you following anyone? {{{ end }}}</div>
 			{{{ end }}}
 			<!-- IMPORT partials/posts_list.tpl -->
 
