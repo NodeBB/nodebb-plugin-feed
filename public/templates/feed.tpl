@@ -13,12 +13,12 @@
 				{{{ if selectedUser }}}
 				<span class="">{buildAvatar(selectedUser, "18", true, "not-responsive")} {selectedUser.username}</span>
 				{{{ else }}}
-				<span class="">All Users</span>
+				<span class="">[[feed:all-users]]</span>
 				{{{ end }}} <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				<li role="presentation" class="user {{{ if !selectedUser}}}selected{{{end}}}">
-					<a role="menu-item" href="{config.relative_path}/{allUsersUrl}"><i class="fa fa-fw {{{ if !selectedUser }}}fa-check{{{ end }}}"></i>All Users</a>
+					<a role="menu-item" href="{config.relative_path}/{allUsersUrl}"><i class="fa fa-fw {{{ if !selectedUser }}}fa-check{{{ end }}}"></i>[[feed:all-users]]</a>
 				</li>
 				{{{ each following }}}
 				<li role="presentation" class="user {{{ if following.selected}}}selected{{{end}}}">
