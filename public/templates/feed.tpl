@@ -5,7 +5,7 @@
 </div>
 
 <div class="feed">
-	<div class="topic-list-header d-flex justify-content-end gap-1">
+	<div class="topic-list-header d-flex justify-content-end py-2 mb-2 gap-1">
 		<!-- IMPORT partials/category-filter-right.tpl -->
 
 		<div class="btn-group bottom-sheet {{{ if !following.length }}}hidden{{{ end }}}">
