@@ -44,7 +44,7 @@
 		<div class="col-lg-9 col-sm-12">
 		{{{ end }}}
 			{{{ if !posts.length  }}}
-			<div class="alert alert-warning text-center">[[feed:No-posts-found.]] {{{ if !following.length }}}[[feed:Are-you-following-anyone?]] {{{ end }}}</div>
+			<div class="alert alert-warning text-center">[[feed:no-posts-found]] {{{ if !following.length }}}[[feed:are-you-following-anyone]] {{{ end }}}</div>
 			{{{ end }}}
 			<!-- IMPORT partials/posts_list.tpl -->
 
