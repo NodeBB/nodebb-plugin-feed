@@ -16,7 +16,7 @@
 				<span class="">[[feed:all-users]]</span>
 				{{{ end }}} <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" role="menu">
+			<ul class="dropdown-menu dropdown-menu-end" role="menu">
 				<li role="presentation" class="user {{{ if !selectedUser}}}selected{{{end}}}">
 					<a class="dropdown-item" role="menu-item" href="{config.relative_path}/{allUsersUrl}"><i class="fa fa-fw {{{ if !selectedUser }}}fa-check{{{ end }}}"></i>[[feed:all-users]]</a>
 				</li>
