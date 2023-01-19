@@ -6,27 +6,8 @@
 
 <div class="feed">
 	<div class="topic-list-header d-flex justify-content-end py-2 mb-2 gap-1">
-		<!-- IMPORT partials/category-filter-right.tpl -->
-
-		<div class="btn-group bottom-sheet {{{ if !following.length }}}hidden{{{ end }}}">
-			<button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-				{{{ if selectedUser }}}
-				<span class="">{buildAvatar(selectedUser, "18px", true, "not-responsive")} {selectedUser.username}</span>
-				{{{ else }}}
-				<span class="">[[feed:all-users]]</span>
-				{{{ end }}} <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu dropdown-menu-end" role="menu">
-				<li role="presentation" class="user {{{ if !selectedUser}}}selected{{{end}}}">
-					<a class="dropdown-item" role="menu-item" href="{config.relative_path}/{allUsersUrl}"><i class="fa fa-fw {{{ if !selectedUser }}}fa-check{{{ end }}}"></i>[[feed:all-users]]</a>
-				</li>
-				{{{ each following }}}
-				<li role="presentation" class="user {{{ if following.selected}}}selected{{{end}}}">
-					<a class="dropdown-item" role="menu-item" href="{config.relative_path}/{following.url}"><i class="fa fa-fw {{{ if following.selected }}}fa-check{{{ end }}}"></i>{buildAvatar(@value, "18px", true, "not-responsive")} {following.username}</a>
-				</li>
-				{{{end}}}
-			</ul>
-		</div>
+		<!-- IMPORT partials/category/filter-dropdown-right.tpl -->
+		<!-- IMPORT partials/users/filter-dropdown-right.tpl -->
 	</div>
 	<div class="row">
 		<div data-widget-area="left" class="col-lg-3 col-sm-12 {{{ if !widgets.left.length }}}hidden{{{ end }}}">

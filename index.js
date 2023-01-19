@@ -66,7 +66,7 @@ async function renderFeed(req, res) {
 
 	res.render('feed', {
 		posts: postData,
-		following: following,
+		users: following,
 		allCategoriesUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'cid', ''),
 		allUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'uid', ''),
 		selectedUser: following.find(u => u.uid === uid),
