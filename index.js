@@ -57,11 +57,11 @@ async function renderFeed(req, res) {
 	const pids = await privileges.posts.filter('topics:read', allPids, req.uid);
 
 	const pageCount = Math.max(1, Math.ceil(pids.length / meta.config.postsPerPage));
-	const page = Math.min(parseInt(req.query.page, 10) || 1, pageCount);
+	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
 	const stop = start + meta.config.postsPerPage - 1;
-	const pagePids = pids.slice(start, stop + 1);
+	const pagePids = page > pageCount ? [] : pids.slice(start, stop + 1);
 	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, { stripTags: false });
 
 	res.render('feed', {
