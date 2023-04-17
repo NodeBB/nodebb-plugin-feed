@@ -17,7 +17,7 @@ const meta = require.main.require('./src/meta');
 const feed = module.exports;
 
 feed.init = async function (params) {
-	routeHelpers.setupPageRoute(params.router, '/feed', params.middleware, [], renderFeed);
+	routeHelpers.setupPageRoute(params.router, '/feed', renderFeed);
 };
 
 async function renderFeed(req, res) {
