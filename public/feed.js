@@ -42,7 +42,6 @@ define('forum/feed', [
 			$('[component="posts"]').append(html);
 			html.find('img:not(.not-responsive)').addClass('img-fluid');
 			html.find('.timeago').timeago();
-			app.createUserTooltips(html);
 			utils.makeNumbersHumanReadable(html.find('.human-readable-number'));
 			callback();
 		});
