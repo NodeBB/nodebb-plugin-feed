@@ -14,6 +14,7 @@ const topics = require.main.require('./src/topics');
 const privileges = require.main.require('./src/privileges');
 const pagination = require.main.require('./src/pagination');
 const meta = require.main.require('./src/meta');
+const translator = require.main.require('./src/translator');
 
 const feed = module.exports;
 
@@ -81,6 +82,9 @@ async function renderFeed(req, res) {
 		p.topic.thumbs = tidToThumbs[p.tid];
 		p.upvoted = upvotes[index];
 		p.bookmarked = bookmarkStatus[index];
+		if (!p.isMainpost) {
+			p.repliedString = translator.compile('feed:replied-in-ago', p.topic.title, p.timestampISO);
+		}
 	});
 
 

@@ -49,7 +49,7 @@
 								<div class="post-author d-flex align-items-center gap-1">
 									<a class="lh-1 fw-semibold" href="{config.relative_path}/user/{./user.userslug}">{../user.displayname}</a>
 								</div>
-								{{{ if !./isMainPost}}}[[feed:replied-in-ago, {./topic.title}, {./timestampISO}]]{{{ else }}}<span class="timeago text-muted lh-1" title="{./timestampISO}"></span>{{{ end}}}
+								{{{ if !./isMainPost}}}{./repliedString}{{{ else }}}<span class="timeago text-muted lh-1" title="{./timestampISO}"></span>{{{ end}}}
 							</div>
 
 							<div component="post/content" class="content text-sm text-break position-relative">

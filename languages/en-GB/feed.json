@@ -1,5 +1,5 @@
 {
     "no-posts-found": "No posts found.",
     "are-you-following-anyone": "Are you following anyone?",
-    "replied-in-ago": "<span class=\"text-nowrap text-truncate\">replied in \"%1\"</span> <span class=\"timeago text-muted text-nowrap\" title=\"%2\"></span>"
+    "replied-in-ago": "<span class=\"text-nowrap text-truncate\" title=\"%1\">replied in \"%1\"</span> <span class=\"timeago text-muted text-nowrap\" title=\"%2\"></span>"
 }
