@@ -10,6 +10,7 @@ const routeHelpers = require.main.require('./src/routes/helpers');
 const controllerHelpers = require.main.require('./src/controllers/helpers');
 const user = require.main.require('./src/user');
 const posts = require.main.require('./src/posts');
+const topics = require.main.require('./src/topics');
 const privileges = require.main.require('./src/privileges');
 const pagination = require.main.require('./src/pagination');
 const meta = require.main.require('./src/meta');
@@ -62,7 +63,26 @@ async function renderFeed(req, res) {
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
 	const stop = start + meta.config.postsPerPage - 1;
 	const pagePids = page > pageCount ? [] : pids.slice(start, stop + 1);
-	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, { stripTags: false });
+	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, {
+		stripTags: false,
+		extraFields: ['bookmarks'],
+	});
+
+	const uniqTids = _.uniq(postData.map(p => p.tid));
+	const [topicData, { upvotes }, bookmarkStatus] = await Promise.all([
+		topics.getTopicsFields(uniqTids, ['tid', 'numThumbs']),
+		posts.getVoteStatusByPostIDs(pagePids, req.uid),
+		posts.hasBookmarked(pagePids, req.uid),
+	]);
+
+	const thumbs = await topics.thumbs.load(topicData);
+	const tidToThumbs = _.zipObject(uniqTids, thumbs);
+	postData.forEach((p, index) => {
+		p.topic.thumbs = tidToThumbs[p.tid];
+		p.upvoted = upvotes[index];
+		p.bookmarked = bookmarkStatus[index];
+	});
+
 
 	res.render('feed', {
 		posts: postData,
