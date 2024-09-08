@@ -17,12 +17,13 @@ define('forum/feed', [
 		categoryFilter.init($('[component="category/dropdown"]'));
 		page = ajaxify.data.pagination.currentPage;
 		pageCount = ajaxify.data.pagination.pageCount;
+		const feedEl = $('.feed');
 		if (!config.usePagination) {
-			infinitescroll.init(loadMore);
+			infinitescroll.init(feedEl, loadMore);
 		}
 
 
-		$('.feed').on('click', '[data-action="bookmark"]', function () {
+		feedEl.on('click', '[data-action="bookmark"]', function () {
 			const $this = $(this);
 			const isBookmarked = $this.attr('data-bookmarked') === 'true';
 			const pid = $this.attr('data-pid');
@@ -46,7 +47,7 @@ define('forum/feed', [
 			});
 		});
 
-		$('.feed').on('click', '[data-action="upvote"]', function () {
+		feedEl.on('click', '[data-action="upvote"]', function () {
 			const $this = $(this);
 			const isUpvoted = $this.attr('data-upvoted') === 'true';
 			const pid = $this.attr('data-pid');
@@ -75,7 +76,7 @@ define('forum/feed', [
 			});
 		});
 
-		$('.feed').on('click', '[data-action="reply"]', function () {
+		feedEl.on('click', '[data-action="reply"]', function () {
 			const $this = $(this);
 			app.newReply({
 				tid: $this.attr('data-tid'),
