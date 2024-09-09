@@ -63,6 +63,7 @@ async function renderFeed(req, res) {
 	const thumbs = await topics.thumbs.load(topicData);
 	const tidToThumbs = _.zipObject(uniqTids, thumbs);
 	postData.forEach((p, index) => {
+		p.pid = encodeURIComponent(p.pid);
 		p.topic.thumbs = tidToThumbs[p.tid];
 		p.upvoted = upvotes[index];
 		p.bookmarked = bookmarkStatus[index];
