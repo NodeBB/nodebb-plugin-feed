@@ -31,7 +31,8 @@ async function renderFeed(req, res) {
 		showFollowed ? db.getSortedSetRevRange(`following:${req.uid}`, 0, -1) : [],
 		controllerHelpers.getSelectedCategory(cids),
 	]);
-	const readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
+	let readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
+	readableCids = readableCids.filter(cid => cid !== -1);
 	const selectedCids = cids || readableCids || [];
 
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
