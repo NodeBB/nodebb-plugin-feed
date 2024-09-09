@@ -31,7 +31,7 @@
 			<div class="alert alert-warning text-center">[[feed:no-posts-found]] {{{ if !following.length }}}[[feed:are-you-following-anyone]] {{{ end }}}</div>
 			{{{ end }}}
 
-			<ul component="posts" class="posts-list list-unstyled" data-nextstart="{nextStart}">
+			<ul component="posts" class="list-unstyled" data-nextstart="{nextStart}">
 				{{{ each posts }}}
 				<li component="post" class="shadow-sm p-3 mb-3 rounded border posts-list-item  {{{ if ./deleted }}} deleted{{{ else }}}{{{ if ./topic.deleted }}} deleted{{{ end }}}{{{ end }}}{{{ if ./topic.scheduled }}} scheduled{{{ end }}}" data-pid="{./pid}" data-uid="{./uid}">
 					{{{ if ./isMainPost }}}
