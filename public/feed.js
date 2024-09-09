@@ -11,12 +11,11 @@ define('forum/feed', [
 ], function (infinitescroll, categoryFilter, api, alerts, hooks, helpers) {
 	var feed = {};
 	var page = 1;
-	var pageCount = 1;
+	var done = false;
 
 	feed.init = function () {
 		categoryFilter.init($('[component="category/dropdown"]'));
-		page = ajaxify.data.pagination.currentPage;
-		pageCount = ajaxify.data.pagination.pageCount;
+		page = ajaxify.data.currentPage;
 		const feedEl = $('.feed');
 		if (!config.usePagination) {
 			infinitescroll.init(feedEl, loadMore);
@@ -91,7 +90,7 @@ define('forum/feed', [
 		}
 		var params = utils.params();
 		page += 1;
-		if (page > pageCount) {
+		if (done) {
 			return;
 		}
 		params.page = page;
@@ -100,6 +99,7 @@ define('forum/feed', [
 			if (data.posts && data.posts.length) {
 				onPostsLoaded(data.posts, done);
 			} else {
+				done = true;
 				done();
 			}
 		});

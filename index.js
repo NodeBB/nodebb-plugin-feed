@@ -1,18 +1,14 @@
 
 'use strict';
 
-const querystring = require('querystring');
-
 const _ = require.main.require('lodash');
 
 const db = require.main.require('./src/database');
 const routeHelpers = require.main.require('./src/routes/helpers');
 const controllerHelpers = require.main.require('./src/controllers/helpers');
-const user = require.main.require('./src/user');
 const posts = require.main.require('./src/posts');
 const topics = require.main.require('./src/topics');
-const privileges = require.main.require('./src/privileges');
-const pagination = require.main.require('./src/pagination');
+const categories = require.main.require('./src/categories');
 const meta = require.main.require('./src/meta');
 const translator = require.main.require('./src/translator');
 
@@ -28,46 +24,33 @@ async function renderFeed(req, res) {
 	}
 
 	const cids = getCidsArray(req.query.cid);
-	const uid = parseInt(req.query.uid, 10);
+	const showFollowed = req.query.users === 'followed';
+	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
-	const [uids, categoryData] = await Promise.all([
-		db.getSortedSetRevRange(`following:${req.uid}`, 0, -1),
+	const [followedUids, categoryData] = await Promise.all([
+		showFollowed ? db.getSortedSetRevRange(`following:${req.uid}`, 0, -1) : [],
 		controllerHelpers.getSelectedCategory(cids),
 	]);
-
-	const currentUids = uid ? [uid] : uids;
-	const sets = _.flatten(currentUids.map((uid) => {
-		if (cids) {
-			return cids.map(cid => `cid:${cid}:uid:${uid}:pids`);
-		}
-		return `uid:${uid}:posts`;
-	}));
-
-	const [allPids, following] = await Promise.all([
-		db.getSortedSetRevRange(
-			sets, 0, 499
-		),
-		user.getUsersFields(uids, ['username', 'uid', 'picture']),
-	]);
-
-	delete req.query._;
-	following.forEach((user) => {
-		user.selected = user.uid === uid;
-		user.url = `feed?${querystring.stringify({ ...req.query, uid: user.uid })}`;
-	});
-
-	const pids = await privileges.posts.filter('topics:read', allPids, req.uid);
-
-	const pageCount = Math.max(1, Math.ceil(pids.length / meta.config.postsPerPage));
-	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+	const readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
+	const selectedCids = cids || readableCids || [];
 
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
 	const stop = start + meta.config.postsPerPage - 1;
-	const pagePids = page > pageCount ? [] : pids.slice(start, stop + 1);
+	let sets = [];
+	if (showFollowed) {
+		sets = _.flatten(
+			followedUids.map(uid => selectedCids.map(cid => `cid:${cid}:uid:${uid}:pids`))
+		);
+	} else {
+		sets = selectedCids.map(cid => `cid:${cid}:pids`);
+	}
+	const pagePids = await db.getSortedSetRevRange(sets, start, stop);
 	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, {
 		stripTags: false,
 		extraFields: ['bookmarks'],
 	});
+
+	delete req.query._;
 
 	const uniqTids = _.uniq(postData.map(p => p.tid));
 	const [topicData, { upvotes }, bookmarkStatus] = await Promise.all([
@@ -90,13 +73,13 @@ async function renderFeed(req, res) {
 
 	res.render('feed', {
 		posts: postData,
-		users: following,
 		allCategoriesUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'cid', ''),
-		allUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'uid', ''),
-		selectedUser: following.find(u => u.uid === uid),
+		allUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'users', ''),
+		followedUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'users', 'followed'),
+		currentPage: page,
+		showFollowed,
 		selectedCategory: categoryData.selectedCategory,
 		selectedCids: categoryData.selectedCids,
-		pagination: pagination.create(page, pageCount, req.query),
 	});
 }
 
