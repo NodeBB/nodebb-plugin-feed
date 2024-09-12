@@ -24,17 +24,30 @@
 			<div class="d-flex justify-content-between py-2 mb-2 gap-1">
 				<button id="new_topic" class="btn btn-primary btn-sm">[[category:new-topic-button]]</button>
 				{{{ if posts.length }}}
+				<div class="d-flex justify-content-end  gap-1">
+					<!-- IMPORT partials/category/filter-dropdown-right.tpl -->
 
-				<ul class="nav nav-underline">
-					<li class="nav-item">
-					  <a class="nav-link py-1 {{{ if !showFollowed }}}active{{{ end }}}" aria-current="page" href="{config.relative_path}/{allUsersUrl}">[[users:all-users]]</a>
-					</li>
-					<li class="nav-item">
-					  <a class="nav-link py-1 {{{ if showFollowed }}}active {{{ end }}}" href="{config.relative_path}/{followedUsersUrl}">[[users:followed-users]]</a>
-					</li>
-				</ul>
-
-				<!-- IMPORT partials/category/filter-dropdown-right.tpl -->
+					<div class="dropdown dropdown-right bottom-sheet">
+						<button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 ff-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fa fa-fw fa-user text-primary"></i>
+							{{{ if !showFollowed }}}<span class="fw-semibold">[[users:all-users]]</span>{{{ else }}}<span class="fw-semibold">[[users:followed-users]]</span>{{{ end }}}
+						</button>
+						<ul class="dropdown-menu p-1 text-sm" role="menu">
+							<li class="">
+								<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem" href="{config.relative_path}/{allUsersUrl}">
+									<div class="flex-grow-1">[[users:all-users]]</div>
+									<i class="flex-shrink-0 fa fa-fw {{{ if !showFollowed }}}fa-check{{{ end }}}"></i>
+								</a>
+							</li>
+							<li class="">
+								<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem" href="{config.relative_path}/{followedUsersUrl}">
+									<div class="flex-grow-1">[[users:followed-users]]</div>
+									<i class="flex-shrink-0 fa fa-fw {{{ if showFollowed }}}fa-check{{{ end }}}"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 				{{{ end }}}
 			</div>
 
