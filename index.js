@@ -23,7 +23,7 @@ async function renderFeed(req, res) {
 		return controllerHelpers.notAllowed(req, res);
 	}
 
-	const cids = getCidsArray(req.query.cid);
+	let cids = getCidsArray(req.query.cid);
 	const showFollowed = req.query.users === 'followed';
 	const showAllPosts = req.query.posts === 'all';
 	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
@@ -34,6 +34,9 @@ async function renderFeed(req, res) {
 	]);
 	let readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
 	readableCids = readableCids.filter(cid => cid !== -1);
+	if (Array.isArray(cids)) {
+		cids = cids.filter(cid => readableCids.includes(cid));
+	}
 	const selectedCids = cids || readableCids || [];
 
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
