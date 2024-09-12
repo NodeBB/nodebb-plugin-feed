@@ -24,29 +24,29 @@
 			<div class="d-flex justify-content-between py-2 mb-2 gap-1">
 				<button id="new_topic" class="btn btn-primary btn-sm">[[category:new-topic-button]]</button>
 				{{{ if posts.length }}}
-				<div class="d-flex justify-content-end  gap-1">
+				<div class="d-flex justify-content-end gap-1">
 					<!-- IMPORT partials/category/filter-dropdown-right.tpl -->
 
-					<div class="dropdown dropdown-right bottom-sheet">
+					<div id="options-dropdown" class="btn-group dropdown dropdown-right bottom-sheet">
 						<button type="button" class="btn btn-ghost btn-sm d-flex align-items-center gap-2 ff-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i class="fa fa-fw fa-user text-primary"></i>
-							{{{ if !showFollowed }}}<span class="fw-semibold">[[users:all-users]]</span>{{{ else }}}<span class="fw-semibold">[[users:followed-users]]</span>{{{ end }}}
+							<i class="fa fa-fw fa-gear text-primary"></i>
 						</button>
 						<ul class="dropdown-menu p-1 text-sm" role="menu">
-							<li class="">
-								<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem" href="{config.relative_path}/{allUsersUrl}">
-									<div class="flex-grow-1">[[users:all-users]]</div>
-									<i class="flex-shrink-0 fa fa-fw {{{ if !showFollowed }}}fa-check{{{ end }}}"></i>
-								</a>
+							<li class="py-1 px-3">
+								<div class="form-check form-switch d-flex px-0 align-items-center justify-content-between gap-3">
+									<label class="form-check-label text-nowrap" for="showAllPosts">[[feed:show-all-posts]]</label>
+									<input class="form-check-input float-none ms-0" type="checkbox" role="switch" id="showAllPosts" {{{ if showAllPosts }}}checked{{{ end }}}>
+								</div>
 							</li>
-							<li class="">
-								<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem" href="{config.relative_path}/{followedUsersUrl}">
-									<div class="flex-grow-1">[[users:followed-users]]</div>
-									<i class="flex-shrink-0 fa fa-fw {{{ if showFollowed }}}fa-check{{{ end }}}"></i>
-								</a>
+							<li class="py-1 px-3">
+								<div class="form-check form-switch d-flex px-0 align-items-center justify-content-between gap-3">
+									<label class="form-check-label text-nowrap" for="showFollowedUsers">[[users:followed-users]]</label>
+									<input class="form-check-input float-none ms-0" type="checkbox" role="switch" id="showFollowedUsers" {{{ if showFollowed }}}checked{{{ end }}}>
+								</div>
 							</li>
 						</ul>
 					</div>
+
 				</div>
 				{{{ end }}}
 			</div>
@@ -86,13 +86,13 @@
 							</div>
 							<hr class="my-2"/>
 							<div class="d-flex justify-content-between">
-								<a href="{config.relative_path}/post/{./pid}" class="btn btn-link btn-sm text-body"><i class="fa-fw fa-regular fa-message text-xs text-muted"></i> {humanReadableNumber(./topic.postcount)}</a>
+								<a href="{config.relative_path}/post/{{{ if ./topic.teaserPid }}}{./topic.teaserPid}{{{ else }}}{./pid}{{{ end }}}" class="btn btn-link btn-sm text-body {{{ if !./isMainPost }}}invisible{{{ end }}}"><i class="fa-fw fa-regular fa-message text-xs text-muted"></i> {humanReadableNumber(./topic.postcount)}</a>
 
 								<a href="#" data-pid="{./pid}" data-action="bookmark" data-bookmarked="{./bookmarked}" data-bookmarks="{./bookmarks}" class="btn btn-link btn-sm text-body"><i class="fa-fw fa-bookmark text-xs {{{ if ./bookmarked }}}fa text-primary{{{ else }}}fa-regular text-muted{{{ end }}}"></i> <span component="bookmark-count">{humanReadableNumber(./bookmarks)}</span></a>
 
 								<a href="#" data-pid="{./pid}" data-action="upvote" data-upvoted="{./upvoted}" data-upvotes="{./upvotes}" class="btn btn-link btn-sm text-body"><i class="fa-fw fa-heart text-xs {{{ if ./upvoted }}}fa text-danger{{{ else }}}fa-regular text-muted{{{ end }}}"></i> <span component="upvote-count">{humanReadableNumber(./upvotes)}</span></a>
 
-								<a href="#" data-pid="{./pid}" data-tid="{./tid}" data-action="reply" class="btn btn-link btn-sm text-body"><i class="fa-fw fa fa-reply text-xs text-muted"></i> [[topic:reply]]</a>
+								<a href="#" data-pid="{./pid}" data-is-main="{./isMainPost}" data-tid="{./tid}" data-action="reply" class="btn btn-link btn-sm text-body"><i class="fa-fw fa fa-reply text-xs text-muted"></i> [[topic:reply]]</a>
 							</div>
 						</div>
 					</div>

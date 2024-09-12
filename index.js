@@ -25,6 +25,7 @@ async function renderFeed(req, res) {
 
 	const cids = getCidsArray(req.query.cid);
 	const showFollowed = req.query.users === 'followed';
+	const showAllPosts = req.query.posts === 'all';
 	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
 	const [followedUids, categoryData] = await Promise.all([
@@ -38,14 +39,28 @@ async function renderFeed(req, res) {
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
 	const stop = start + meta.config.postsPerPage - 1;
 	let sets = [];
-	if (showFollowed) {
-		sets = _.flatten(
-			followedUids.map(uid => selectedCids.map(cid => `cid:${cid}:uid:${uid}:pids`))
-		);
+	let pagePids = [];
+	if (showAllPosts) {
+		if (showFollowed) {
+			sets = _.flatten(
+				followedUids.map(uid => selectedCids.map(cid => `cid:${cid}:uid:${uid}:pids`))
+			);
+		} else {
+			sets = selectedCids.map(cid => `cid:${cid}:pids`);
+		}
+		pagePids = await db.getSortedSetRevRange(sets, start, stop);
 	} else {
-		sets = selectedCids.map(cid => `cid:${cid}:pids`);
+		if (showFollowed) {
+			sets = _.flatten(
+				followedUids.map(uid => selectedCids.map(cid => `cid:${cid}:uid:${uid}:tids`))
+			);
+		} else {
+			sets = selectedCids.map(cid => `cid:${cid}:tids:create`);
+		}
+		const pageTids = await db.getSortedSetRevRange(sets, start, stop);
+		pagePids = (await topics.getTopicsFields(pageTids, ['mainPid'])).map(t => t && t.mainPid);
 	}
-	const pagePids = await db.getSortedSetRevRange(sets, start, stop);
+
 	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, {
 		stripTags: false,
 		extraFields: ['bookmarks'],
@@ -64,7 +79,11 @@ async function renderFeed(req, res) {
 	const tidToThumbs = _.zipObject(uniqTids, thumbs);
 	postData.forEach((p, index) => {
 		p.pid = encodeURIComponent(p.pid);
-		p.topic.thumbs = tidToThumbs[p.tid];
+		if (p.topic) {
+			p.topic.thumbs = tidToThumbs[p.tid];
+			p.topic.postcount = Math.max(0, p.topic.postcount - 1);
+			p.topic.teaserPid = p.topic.teaserPid ? encodeURIComponent(p.topic.teaserPid) : p.topic.teaserPid;
+		}
 		p.upvoted = upvotes[index];
 		p.bookmarked = bookmarkStatus[index];
 		if (!p.isMainpost) {
@@ -76,10 +95,9 @@ async function renderFeed(req, res) {
 	res.render('feed', {
 		posts: postData,
 		allCategoriesUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'cid', ''),
-		allUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'users', ''),
-		followedUsersUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'users', 'followed'),
 		currentPage: page,
 		showFollowed,
+		showAllPosts,
 		selectedCategory: categoryData.selectedCategory,
 		selectedCids: categoryData.selectedCids,
 	});

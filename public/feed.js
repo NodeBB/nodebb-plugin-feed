@@ -21,6 +21,22 @@ define('forum/feed', [
 			infinitescroll.init(feedEl, loadMore);
 		}
 
+		feedEl.on('hidden.bs.dropdown', '#options-dropdown', function () {
+			const query = utils.params();
+			if ($('#showAllPosts').is(':checked')) {
+				query.posts = 'all';
+			} else {
+				delete query.posts;
+			}
+			if ($('#showFollowedUsers').is(':checked')) {
+				query.users = 'followed';
+			} else {
+				delete query.users;
+			}
+
+			const qs = decodeURIComponent($.param(query));
+			ajaxify.go(`/feed${qs.length ? '?' + qs : ''}`);
+		});
 
 		feedEl.on('click', '[data-action="bookmark"]', function () {
 			const $this = $(this);
@@ -77,9 +93,10 @@ define('forum/feed', [
 
 		feedEl.on('click', '[data-action="reply"]', function () {
 			const $this = $(this);
+			const isMain = $this.attr('data-is-main') === 'true';
 			app.newReply({
 				tid: $this.attr('data-tid'),
-				pid: $this.attr('data-pid'),
+				pid: !isMain ? $this.attr('data-pid') : undefined,
 			}).catch(alerts.error);
 		});
 	};
