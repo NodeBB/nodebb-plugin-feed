@@ -51,7 +51,6 @@
 				{{{ end }}}
 			</div>
 
-
 			{{{ if !posts.length  }}}
 			<div class="alert alert-warning text-center">[[feed:no-posts-found]] {{{ if !following.length }}}[[feed:are-you-following-anyone]] {{{ end }}}</div>
 			{{{ end }}}
@@ -84,7 +83,6 @@
 							{./topic.title}
 							</a>
 							{{{ end }}}
-
 
 							<div class="d-flex gap-1 post-info text-sm align-items-center">
 								<div class="post-author d-flex align-items-center gap-1">
