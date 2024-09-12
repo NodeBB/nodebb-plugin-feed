@@ -35,13 +35,13 @@
 							<li class="py-1 px-3">
 								<div class="form-check form-switch d-flex px-0 align-items-center justify-content-between gap-3">
 									<label class="form-check-label text-nowrap" for="showAllPosts">[[feed:show-all-posts]]</label>
-									<input class="form-check-input float-none ms-0" type="checkbox" role="switch" id="showAllPosts" {{{ if showAllPosts }}}checked{{{ end }}}>
+									<input class="form-check-input float-none m-0" type="checkbox" role="switch" id="showAllPosts" {{{ if showAllPosts }}}checked{{{ end }}}>
 								</div>
 							</li>
 							<li class="py-1 px-3">
 								<div class="form-check form-switch d-flex px-0 align-items-center justify-content-between gap-3">
 									<label class="form-check-label text-nowrap" for="showFollowedUsers">[[users:followed-users]]</label>
-									<input class="form-check-input float-none ms-0" type="checkbox" role="switch" id="showFollowedUsers" {{{ if showFollowed }}}checked{{{ end }}}>
+									<input class="form-check-input float-none m-0" type="checkbox" role="switch" id="showFollowedUsers" {{{ if showFollowed }}}checked{{{ end }}}>
 								</div>
 							</li>
 						</ul>
