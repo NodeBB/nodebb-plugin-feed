@@ -69,7 +69,7 @@
 						<div class="position-absolute end-0 bottom-0 p-3 d-flex gap-2 align-items-center pe-none">
 							{{{ each ./topic.thumbs }}}
 							{{{ if (@index != 0) }}}
-							<img class="rounded-1" width="64" src="{./url}">
+							<img class="rounded-1" style="max-height: 64px; object-fit: contain;" src="{./url}">
 							{{{ end }}}
 							{{{ end }}}
 						</div>
