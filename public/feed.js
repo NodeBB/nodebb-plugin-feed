@@ -20,9 +20,12 @@ define('forum/feed', [
 		if (!config.usePagination) {
 			infinitescroll.init(feedEl, loadMore);
 		}
-
+		let currentShowAllPosts = $('#showAllPosts').is(':checked');
+		let currentShowFollowedUsers = $('#showFollowedUsers').is(':checked');
 		feedEl.on('hidden.bs.dropdown', '#options-dropdown', function () {
 			const query = utils.params();
+			const optionsChanged = currentShowAllPosts !== $('#showAllPosts').is(':checked') ||
+				currentShowFollowedUsers !== $('#showAllPosts').is(':checked');
 			if ($('#showAllPosts').is(':checked')) {
 				query.posts = 'all';
 			} else {
@@ -33,9 +36,10 @@ define('forum/feed', [
 			} else {
 				delete query.users;
 			}
-
-			const qs = decodeURIComponent($.param(query));
-			ajaxify.go(`/feed${qs.length ? '?' + qs : ''}`);
+			if (optionsChanged) {
+				const qs = decodeURIComponent($.param(query));
+				ajaxify.go(`/feed${qs.length ? '?' + qs : ''}`);
+			}
 		});
 
 		feedEl.on('click', '[data-action="bookmark"]', function () {
