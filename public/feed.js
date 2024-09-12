@@ -20,8 +20,8 @@ define('forum/feed', [
 		if (!config.usePagination) {
 			infinitescroll.init(feedEl, loadMore);
 		}
-		let currentShowAllPosts = $('#showAllPosts').is(':checked');
-		let currentShowFollowedUsers = $('#showFollowedUsers').is(':checked');
+		const currentShowAllPosts = $('#showAllPosts').is(':checked');
+		const currentShowFollowedUsers = $('#showFollowedUsers').is(':checked');
 		feedEl.on('hidden.bs.dropdown', '#options-dropdown', function () {
 			const query = utils.params();
 			const optionsChanged = currentShowAllPosts !== $('#showAllPosts').is(':checked') ||
