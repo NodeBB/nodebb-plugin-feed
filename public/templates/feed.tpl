@@ -58,9 +58,23 @@
 
 			<ul component="posts" class="list-unstyled" data-nextstart="{nextStart}">
 				{{{ each posts }}}
-				<li component="post" class="shadow-sm p-3 mb-3 rounded border posts-list-item  {{{ if ./deleted }}} deleted{{{ else }}}{{{ if ./topic.deleted }}} deleted{{{ end }}}{{{ end }}}{{{ if ./topic.scheduled }}} scheduled{{{ end }}}" data-pid="{./pid}" data-uid="{./uid}">
+				<li component="post" class="shadow-sm mb-3 rounded-2 border posts-list-item  {{{ if ./deleted }}} deleted{{{ else }}}{{{ if ./topic.deleted }}} deleted{{{ end }}}{{{ end }}}{{{ if ./topic.scheduled }}} scheduled{{{ end }}}" data-pid="{./pid}" data-uid="{./uid}">
+					{{{ if ./topic.thumbs.length }}}
+					<div class="p-1 position-relative">
+						<a href="{config.relative_path}/topic/{./topic.slug}">
+							<img class="w-100 rounded-1" src="{./topic.thumbs.0.url}">
+						</a>
+						<div class="position-absolute end-0 bottom-0 p-3 d-flex gap-2 align-items-center pe-none">
+							{{{ each ./topic.thumbs }}}
+							{{{ if (@index != 0) }}}
+							<img class="rounded-1" width="64" src="{./url}">
+							{{{ end }}}
+							{{{ end }}}
+						</div>
+					</div>
+					{{{ end }}}
 
-					<div class="d-flex gap-2">
+					<div class="d-flex gap-2 p-3">
 						<div class="d-none d-lg-block">
 							<a class="lh-1 text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(./user, "40px", true, "not-responsive")}</a>
 						</div>
