@@ -32,13 +32,15 @@ async function renderFeed(req, res) {
 		showFollowed ? db.getSortedSetRevRange(`following:${req.uid}`, 0, -1) : [],
 		controllerHelpers.getSelectedCategory(cids),
 	]);
-	let readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
-	readableCids = readableCids.filter(cid => cid !== -1);
+	const readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
+
 	if (Array.isArray(cids)) {
 		cids = cids.filter(cid => readableCids.includes(cid));
 	}
-	const selectedCids = cids || readableCids || [];
-
+	let selectedCids = cids || readableCids || [];
+	if (!cids) {
+		selectedCids = readableCids.filter(cid => cid !== -1);
+	}
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
 	const stop = start + meta.config.postsPerPage - 1;
 	let sets = [];
