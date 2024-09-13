@@ -60,7 +60,7 @@
 				<li component="post" class="shadow-sm mb-3 rounded-2 border posts-list-item  {{{ if ./deleted }}} deleted{{{ else }}}{{{ if ./topic.deleted }}} deleted{{{ end }}}{{{ end }}}{{{ if ./topic.scheduled }}} scheduled{{{ end }}}" data-pid="{./pid}" data-uid="{./uid}">
 					{{{ if ./topic.thumbs.length }}}
 					<div class="p-1 position-relative">
-						<div class="overflow-hidden rounded-1" style="max-height: 225px;">
+						<div class="overflow-hidden rounded-1" style="max-height: 300px;">
 							<a href="{config.relative_path}/topic/{./topic.slug}">
 								<img class="w-100" src="{./topic.thumbs.0.url}">
 							</a>
