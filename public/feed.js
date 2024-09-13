@@ -25,7 +25,8 @@ define('forum/feed', [
 		feedEl.on('hidden.bs.dropdown', '#options-dropdown', function () {
 			const query = utils.params();
 			const optionsChanged = currentShowAllPosts !== $('#showAllPosts').is(':checked') ||
-				currentShowFollowedUsers !== $('#showAllPosts').is(':checked');
+				currentShowFollowedUsers !== $('#showFollowedUsers').is(':checked');
+
 			if ($('#showAllPosts').is(':checked')) {
 				query.posts = 'all';
 			} else {
