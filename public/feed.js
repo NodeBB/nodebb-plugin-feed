@@ -14,7 +14,9 @@ define('forum/feed', [
 	var done = false;
 
 	feed.init = function () {
-		categoryFilter.init($('[component="category/dropdown"]'));
+		categoryFilter.init($('[component="category/dropdown"]'), {
+			states: ['watching', 'tracking', 'notwatching'],
+		});
 		page = ajaxify.data.currentPage;
 		const feedEl = $('.feed');
 		if (!config.usePagination) {

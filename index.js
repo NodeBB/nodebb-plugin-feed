@@ -9,7 +9,9 @@ const controllerHelpers = require.main.require('./src/controllers/helpers');
 const posts = require.main.require('./src/posts');
 const topics = require.main.require('./src/topics');
 const categories = require.main.require('./src/categories');
+const user = require.main.require('./src/user');
 const meta = require.main.require('./src/meta');
+const privileges = require.main.require('./src/privileges');
 const translator = require.main.require('./src/translator');
 
 const feed = module.exports;
@@ -19,20 +21,22 @@ feed.init = async function (params) {
 };
 
 async function renderFeed(req, res) {
-	if (!req.loggedIn) {
-		return controllerHelpers.notAllowed(req, res);
-	}
-
 	let cids = getCidsArray(req.query.cid);
-	const showFollowed = req.query.users === 'followed';
+	const showFollowed = req.loggedIn && req.query.users === 'followed';
 	const showAllPosts = req.query.posts === 'all';
 	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
-	const [followedUids, categoryData] = await Promise.all([
+	const [followedUids, categoryData, userCids] = await Promise.all([
 		showFollowed ? db.getSortedSetRevRange(`following:${req.uid}`, 0, -1) : [],
 		controllerHelpers.getSelectedCategory(cids),
+		user.getCategoriesByStates(req.uid, [
+			categories.watchStates.watching,
+			categories.watchStates.tracking,
+			categories.watchStates.notwatching,
+		]),
 	]);
-	const readableCids = await categories.getCidsByPrivilege('categories:cid', req.uid, 'topics:read');
+
+	const readableCids = await privileges.categories.filterCids('topics:read', userCids, req.uid);
 
 	if (Array.isArray(cids)) {
 		cids = cids.filter(cid => readableCids.includes(cid));
@@ -105,6 +109,7 @@ async function renderFeed(req, res) {
 		showAllPosts,
 		selectedCategory: categoryData.selectedCategory,
 		selectedCids: categoryData.selectedCids,
+		showThumbs: req.loggedIn || meta.config.privateUploads !== 1,
 	});
 }
 

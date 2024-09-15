@@ -38,12 +38,14 @@
 									<input class="form-check-input float-none m-0" type="checkbox" role="switch" id="showAllPosts" {{{ if showAllPosts }}}checked{{{ end }}}>
 								</div>
 							</li>
+							{{{ if loggedIn }}}
 							<li class="py-1 px-3">
 								<div class="form-check form-switch d-flex px-0 align-items-center justify-content-between gap-3">
 									<label class="form-check-label text-nowrap" for="showFollowedUsers">[[feed:followed-users-only]]</label>
 									<input class="form-check-input float-none m-0" type="checkbox" role="switch" id="showFollowedUsers" {{{ if showFollowed }}}checked{{{ end }}}>
 								</div>
 							</li>
+							{{{ end }}}
 						</ul>
 					</div>
 
@@ -58,7 +60,8 @@
 			<ul component="posts" class="list-unstyled" data-nextstart="{nextStart}">
 				{{{ each posts }}}
 				<li component="post" class="shadow-sm mb-3 rounded-2 border posts-list-item  {{{ if ./deleted }}} deleted{{{ else }}}{{{ if ./topic.deleted }}} deleted{{{ end }}}{{{ end }}}{{{ if ./topic.scheduled }}} scheduled{{{ end }}}" data-pid="{./pid}" data-uid="{./uid}">
-					{{{ if ./topic.thumbs.length }}}
+
+					{{{ if (showThumbs && ./topic.thumbs.length)}}}
 					<div class="p-1 position-relative">
 						<div class="overflow-hidden rounded-1" style="max-height: 300px;">
 							<a href="{config.relative_path}/topic/{./topic.slug}">
