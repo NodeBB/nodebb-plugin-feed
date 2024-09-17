@@ -1,4 +1,5 @@
 {
+    "feed": "Feed",
     "no-posts-found": "No posts found.",
     "are-you-following-anyone": "Are you following anyone?",
     "replied-in-ago": "<span class=\"text-nowrap text-truncate lh-normal\" title=\"%1\">replied in \"%1\"</span> <span class=\"timeago text-muted text-nowrap lh-normal\" title=\"%2\"></span>",

@@ -2,7 +2,8 @@
     "library": "./index.js",
     "hooks": [
         { "hook": "static:app.load", "method": "init"},
-        { "hook": "filter:widgets.getAreas", "method": "defineWidgetAreas" }
+        { "hook": "filter:widgets.getAreas", "method": "defineWidgetAreas" },
+        { "hook": "filter:navigation.available", "method": "addNavItem" }
     ],
     "modules": {
         "../client/feed.js": "./public/feed.js"
