@@ -148,15 +148,15 @@ feed.defineWidgetAreas = async function (areas) {
 
 feed.addNavItem = async function (items) {
 	items.push({
-		"id": "feed",
-		"route": "/feed",
-		"title": "[[feed:feed]]",
-		"enabled": true,
-		"iconClass": "fa-list",
-		"textClass": "d-lg-none",
-		"text": "[[feed:feed]]",
-		"groups": ["registered-users"]
+		id: 'feed',
+		route: '/feed',
+		title: '[[feed:feed]]',
+		enabled: true,
+		iconClass: 'fa-list',
+		textClass: 'd-lg-none',
+		text: '[[feed:feed]]',
+		groups: [],
 	});
 
 	return items;
-}
+};
