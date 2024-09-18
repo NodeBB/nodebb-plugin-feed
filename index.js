@@ -58,16 +58,37 @@ async function renderFeed(req, res) {
 			sets = selectedCids.map(cid => `cid:${cid}:pids`);
 		}
 		pagePids = await db.getSortedSetRevRange(sets, start, stop);
-	} else {
-		if (showFollowed) {
-			sets = _.flatten(
-				followedUids.map(uid => selectedCids.map(cid => `cid:${cid}:uid:${uid}:tids`))
-			);
-		} else {
-			sets = selectedCids.map(cid => `cid:${cid}:tids:create`);
-		}
+	} else if (showFollowed) {
+		sets = _.flatten(
+			followedUids.map(uid => selectedCids.map(cid => `cid:${cid}:uid:${uid}:tids`))
+		);
 		const pageTids = await db.getSortedSetRevRange(sets, start, stop);
 		pagePids = (await topics.getTopicsFields(pageTids, ['mainPid'])).map(t => t && t.mainPid);
+	} else {
+		sets = selectedCids.map(cid => `cid:${cid}:tids:create`);
+		const pinnedSets = selectedCids.map(cid => `cid:${cid}:tids:pinned`);
+		const [pageTids, pinnedTids] = await Promise.all([
+			db.getSortedSetRevRange(sets, start, stop),
+			db.getSortedSetRevRange(pinnedSets, 0, -1),
+		]);
+
+		const [pageTopics, pinnedTopics] = await Promise.all([
+			topics.getTopicsFields(pageTids, ['mainPid', 'timestamp']),
+			topics.getTopicsFields(pinnedTids, ['mainPid', 'timestamp']),
+		]);
+
+		const lastTid = pageTopics[pageTids.length - 1];
+		if (lastTid) {
+			const firstTs = start === 0 ? Date.now() : await getTopicTs(sets, start - 1);
+			const lastTs = lastTid.timestamp;
+			const pinnedTopicsOnThisPage = pinnedTopics.filter(
+				t => t && t.timestamp >= lastTs && t.timestamp <= firstTs
+			);
+
+			pagePids = pageTopics.concat(pinnedTopicsOnThisPage).sort(
+				(t1, t2) => t2.timestamp - t1.timestamp
+			).map(t => t.mainPid);
+		}
 	}
 
 	const postData = await posts.getPostSummaryByPids(pagePids, req.uid, {
@@ -111,6 +132,11 @@ async function renderFeed(req, res) {
 		selectedCids: categoryData.selectedCids,
 		showThumbs: req.loggedIn || meta.config.privateUploads !== 1,
 	});
+}
+
+async function getTopicTs(sets, index) {
+	const topic = await db.getSortedSetRangeWithScores(sets, index, index);
+	return topic ? topic.score : Date.now();
 }
 
 function getCidsArray(cid) {
