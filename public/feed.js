@@ -11,7 +11,7 @@ define('forum/feed', [
 ], function (infinitescroll, categoryFilter, api, alerts, hooks, helpers) {
 	var feed = {};
 	var page = 1;
-	var done = false;
+	var loadedAll = false;
 
 	feed.init = function () {
 		categoryFilter.init($('[component="category/dropdown"]'), {
@@ -114,7 +114,7 @@ define('forum/feed', [
 		}
 		var params = utils.params();
 		page += 1;
-		if (done) {
+		if (loadedAll) {
 			return;
 		}
 		params.page = page;
@@ -123,7 +123,7 @@ define('forum/feed', [
 			if (data.posts && data.posts.length) {
 				onPostsLoaded(data.posts, done);
 			} else {
-				done = true;
+				loadedAll = true;
 				done();
 			}
 		});
