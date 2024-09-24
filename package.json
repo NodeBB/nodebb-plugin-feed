@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-feed",
-  "version": "3.1.24",
+  "version": "3.1.25",
   "description": "A Plugin that shows posts of users you follow",
   "main": "index.js",
   "repository": {
