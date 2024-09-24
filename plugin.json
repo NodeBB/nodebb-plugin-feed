@@ -8,6 +8,9 @@
     "modules": {
         "../client/feed.js": "./public/feed.js"
     },
+    "scss": [
+        "public/style.scss"
+    ],
     "templates": "./public/templates",
     "languages": "languages"
 }

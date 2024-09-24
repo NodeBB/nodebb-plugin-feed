@@ -1,0 +1,6 @@
+.truncate-post-content {
+	@include line-clamp(15, var(--bs-body-line-height));
+	> p {
+		margin-bottom: 1rem;
+	}
+}

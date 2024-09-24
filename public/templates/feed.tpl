@@ -83,7 +83,7 @@
 						<div class="d-none d-lg-block">
 							<a class="lh-1 text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(./user, "40px", true, "not-responsive")}</a>
 						</div>
-						<div class="post-body d-flex flex-column gap-2 flex-grow-1" style="min-width: 0px;">
+						<div class="post-body d-flex flex-column gap-2 flex-grow-1 hover-parent" style="min-width: 0px;">
 							{{{ if ./isMainPost }}}
 							<a class="lh-1 topic-title fw-semibold fs-5 text-reset text-break d-block" href="{config.relative_path}/topic/{./topic.slug}">
 							{./topic.title}
@@ -98,9 +98,12 @@
 								{{{ if !./isMainPost}}}{./repliedString}{{{ else }}}<span class="timeago text-muted lh-normal" title="{./timestampISO}"></span>{{{ end}}}
 							</div>
 
-							<div component="post/content" class="content text-sm text-break position-relative">
+							<div component="post/content" class="content text-sm text-break position-relative truncate-post-content">
 								<a href="{config.relative_path}/post/{./pid}" class="stretched-link"></a>
 								{./content}
+							</div>
+							<div class="position-relative hover-visible">
+								<button component="show/more" class="btn btn-light btn-sm rounded-pill position-absolute start-50 translate-middle-x bottom-0 z-1 hidden ff-secondary">[[feed:see-more]]</button>
 							</div>
 							<hr class="my-2"/>
 							<div class="d-flex justify-content-between">

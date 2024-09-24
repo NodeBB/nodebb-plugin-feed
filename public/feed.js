@@ -106,7 +106,26 @@ define('forum/feed', [
 				pid: !isMain ? $this.attr('data-pid') : undefined,
 			}).catch(alerts.error);
 		});
+
+		toggleShowMoreButtons(feedEl);
+
+		feedEl.on('click', '[component="show/more"]', function () {
+			const $el = $(this);
+			const postContent = $el.parents('.post-body').find('[component="post/content"]');
+			const isShowingMore = parseInt($el.attr('ismore'), 10) === 1;
+			postContent.toggleClass('truncate-post-content', isShowingMore);
+			$el.translateText(isShowingMore ? '[[feed:see-more]]' : '[[feed:see-less]]');
+			$el.attr('ismore', isShowingMore ? 0 : 1);
+		});
 	};
+
+	function toggleShowMoreButtons(feedEl) {
+		feedEl.find('[component="post/content"]').each((index, el) => {
+			if (el.clientHeight < el.scrollHeight) {
+				$(el).parent().find('[component="show/more"]').removeClass('hidden');
+			}
+		});
+	}
 
 	function loadMore(direction) {
 		if (direction < 0) {
@@ -135,6 +154,7 @@ define('forum/feed', [
 			html.find('img:not(.not-responsive)').addClass('img-fluid');
 			html.find('.timeago').timeago();
 			utils.makeNumbersHumanReadable(html.find('.human-readable-number'));
+			toggleShowMoreButtons(html);
 			callback();
 		});
 	}
