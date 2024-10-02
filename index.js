@@ -123,6 +123,7 @@ async function renderFeed(req, res) {
 
 
 	res.render('feed', {
+		title: '[[feed:feed]]',
 		posts: postData,
 		allCategoriesUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'cid', ''),
 		currentPage: page,
