@@ -26,7 +26,7 @@ async function renderFeed(req, res) {
 	const showAllPosts = req.query.posts === 'all';
 	const page = Math.max(1, parseInt(req.query.page, 10) || 1);
 
-	const [followedUids, categoryData, userCids] = await Promise.all([
+	const [followedUids, categoryData, userCids, canPost] = await Promise.all([
 		showFollowed ? db.getSortedSetRevRange(`following:${req.uid}`, 0, -1) : [],
 		controllerHelpers.getSelectedCategory(cids),
 		user.getCategoriesByStates(req.uid, [
@@ -34,6 +34,7 @@ async function renderFeed(req, res) {
 			categories.watchStates.tracking,
 			categories.watchStates.notwatching,
 		]),
+		privileges.categories.canPostTopic(req.uid),
 	]);
 
 	const readableCids = await privileges.categories.filterCids('topics:read', userCids, req.uid);
@@ -132,6 +133,7 @@ async function renderFeed(req, res) {
 		selectedCategory: categoryData.selectedCategory,
 		selectedCids: categoryData.selectedCids,
 		showThumbs: req.loggedIn || meta.config.privateUploads !== 1,
+		canPost,
 	});
 }
 

@@ -22,7 +22,12 @@
 		{{{ end }}}
 
 			<div class="d-flex justify-content-between py-2 mb-2 gap-1">
+				{{{ if canPost }}}
 				<button id="new_topic" class="btn btn-primary btn-sm">[[category:new-topic-button]]</button>
+				{{{ end }}}
+				{{{ if (!loggedIn && !canPost) }}}
+				<a href="{config.relative_path}/login" class="btn btn-primary btn-sm">[[category:guest-login-post]]</a>
+				{{{ end }}}
 				{{{ if posts.length }}}
 				<div class="d-flex justify-content-end gap-1">
 					<!-- IMPORT partials/category/filter-dropdown-right.tpl -->
