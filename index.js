@@ -111,7 +111,10 @@ async function renderFeed(req, res) {
 	postData.forEach((p, index) => {
 		p.pid = encodeURIComponent(p.pid);
 		if (p.topic) {
-			p.topic.thumbs = tidToThumbs[p.tid];
+			p.topic = { ...p.topic };
+			if (String(p.pid) === String(p.topic.mainPid)) {
+				p.topic.thumbs = tidToThumbs[p.tid];
+			}
 			p.topic.postcount = Math.max(0, p.topic.postcount - 1);
 			p.topic.teaserPid = p.topic.teaserPid ? encodeURIComponent(p.topic.teaserPid) : p.topic.teaserPid;
 		}
