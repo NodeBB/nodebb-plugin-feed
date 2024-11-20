@@ -122,9 +122,13 @@ async function renderFeed(req, res) {
 		}
 	});
 
+	let title = '[[feed:feed]]';
+	if (meta.config.homePageRoute && meta.config.homePageRoute !== 'feed') {
+		title = meta.config.homePageTitle || '[[global:home]]';
+	}
 
 	res.render('feed', {
-		title: '[[feed:feed]]',
+		title,
 		posts: postData,
 		allCategoriesUrl: 'feed' + controllerHelpers.buildQueryString(req.query, 'cid', ''),
 		currentPage: page,
