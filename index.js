@@ -36,7 +36,7 @@ async function renderFeed(req, res) {
 		]),
 		privileges.categories.canPostTopic(req.uid),
 	]);
-
+	userCids.push(-1);
 	const readableCids = await privileges.categories.filterCids('topics:read', userCids, req.uid);
 
 	if (Array.isArray(cids)) {

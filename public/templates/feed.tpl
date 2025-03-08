@@ -28,7 +28,7 @@
 				{{{ if (!loggedIn && !canPost) }}}
 				<a href="{config.relative_path}/login" class="btn btn-primary btn-sm">[[category:guest-login-post]]</a>
 				{{{ end }}}
-				{{{ if posts.length }}}
+
 				<div class="d-flex justify-content-end gap-1">
 					<!-- IMPORT partials/category/filter-dropdown-right.tpl -->
 
@@ -53,9 +53,7 @@
 							{{{ end }}}
 						</ul>
 					</div>
-
 				</div>
-				{{{ end }}}
 			</div>
 
 			{{{ if !posts.length  }}}
