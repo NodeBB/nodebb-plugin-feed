@@ -1,6 +1,5 @@
 'use strict';
 
-/* globals $, define, ajaxify, config, utils, app */
 define('forum/feed', [
 	'forum/infinitescroll',
 	'categoryFilter',

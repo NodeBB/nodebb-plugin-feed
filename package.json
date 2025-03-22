@@ -8,6 +8,7 @@
     "url": "https://github.com/NodeBB/nodebb-plugin-feed"
   },
   "scripts": {
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,9 +20,8 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "7.6.0",
-    "eslint-config-airbnb-base": "14.1.0",
-    "eslint-plugin-import": "2.21.1"
+    "eslint": "9.23.0",
+    "eslint-config-nodebb": "^1.0.7"
   },
   "nbbpm": {
     "compatibility": "^4.0.0"
