@@ -120,7 +120,7 @@ async function renderFeed(req, res) {
 		}
 		p.upvoted = upvotes[index];
 		p.bookmarked = bookmarkStatus[index];
-		if (!p.isMainpost) {
+		if (!p.isMainPost) {
 			p.repliedString = translator.compile('feed:replied-in-ago', p.topic.title, p.timestampISO);
 		}
 	});
