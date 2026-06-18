@@ -1,18 +1,18 @@
 
 'use strict';
 
-const _ = require.main.require('lodash');
+const _ = nodebb.require('lodash');
 
-const db = require.main.require('./src/database');
-const routeHelpers = require.main.require('./src/routes/helpers');
-const controllerHelpers = require.main.require('./src/controllers/helpers');
-const posts = require.main.require('./src/posts');
-const topics = require.main.require('./src/topics');
-const categories = require.main.require('./src/categories');
-const user = require.main.require('./src/user');
-const meta = require.main.require('./src/meta');
-const privileges = require.main.require('./src/privileges');
-const translator = require.main.require('./src/translator');
+const db = nodebb.require('./src/database');
+const routeHelpers = nodebb.require('./src/routes/helpers');
+const controllerHelpers = nodebb.require('./src/controllers/helpers');
+const posts = nodebb.require('./src/posts');
+const topics = nodebb.require('./src/topics');
+const categories = nodebb.require('./src/categories');
+const user = nodebb.require('./src/user');
+const meta = nodebb.require('./src/meta');
+const privileges = nodebb.require('./src/privileges');
+const translator = nodebb.require('./src/translator');
 
 const feed = module.exports;
 
@@ -48,7 +48,7 @@ async function renderFeed(req, res) {
 	}
 	const start = Math.max(0, (page - 1) * meta.config.postsPerPage);
 	const stop = start + meta.config.postsPerPage - 1;
-	let sets = [];
+	let sets;
 	let pagePids = [];
 	if (showAllPosts) {
 		if (showFollowed) {
