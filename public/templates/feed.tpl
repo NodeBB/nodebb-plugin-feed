@@ -101,7 +101,7 @@
 									<a class="d-inline d-lg-none lh-1 text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{{buildAvatar(./user, "16px", true)}}</a>
 									<a class="lh-normal fw-semibold text-nowrap" href="{config.relative_path}/user/{./user.userslug}">{./user.displayname}</a>
 								</div>
-								{{{ if !./isMainPost}}}{./repliedString}{{{ else }}}<span class="timeago text-muted lh-normal" title="{./timestampISO}"></span>{{{ end}}}
+								{{{ if !./isMainPost}}}{{tx(./repliedString)}}{{{ else }}}<span class="timeago text-muted lh-normal" title="{./timestampISO}"></span>{{{ end}}}
 							</div>
 
 							<div component="post/content" class="content text-sm text-break position-relative truncate-post-content">
