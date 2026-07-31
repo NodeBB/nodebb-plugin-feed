@@ -28,7 +28,7 @@ async function renderFeed(req, res) {
 
 	const [followedUids, categoryData, userCids, canPost] = await Promise.all([
 		showFollowed ? db.getSortedSetRevRange(`following:${req.uid}`, 0, -1) : [],
-		controllerHelpers.getSelectedCategory(cids),
+		controllerHelpers.getSelectedCategory(cids, req.uid),
 		user.getCategoriesByStates(req.uid, [
 			categories.watchStates.watching,
 			categories.watchStates.tracking,
