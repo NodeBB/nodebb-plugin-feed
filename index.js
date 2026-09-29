@@ -12,7 +12,7 @@ const categories = nodebb.require('./src/categories');
 const user = nodebb.require('./src/user');
 const meta = nodebb.require('./src/meta');
 const privileges = nodebb.require('./src/privileges');
-const translator = nodebb.require('./src/translator');
+const tx = nodebb.require('./src/translator');
 
 const feed = module.exports;
 
@@ -121,7 +121,7 @@ async function renderFeed(req, res) {
 		p.upvoted = upvotes[index];
 		p.bookmarked = bookmarkStatus[index];
 		if (!p.isMainPost) {
-			p.repliedString = translator.compile('feed:replied-in-ago', p.topic.title, p.timestampISO);
+			p.repliedString = tx.compile('feed:replied-in-ago', tx.escape(p.topic.title), p.timestampISO);
 		}
 	});
 
